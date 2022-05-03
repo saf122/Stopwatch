@@ -1,0 +1,97 @@
+<html>
+<head>
+<title>MainActivity.kt</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cc7832;}
+.s1 { color: #a9b7c6;}
+.s2 { color: #6897bb;}
+.s3 { color: #6a8759;}
+</style>
+</head>
+<body bgcolor="#2b2b2b">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+MainActivity.kt</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">com.ProjectGurukul.stopwatch</span>
+
+<span class="s1">import android.R</span>
+<span class="s1">import android.app.Activity</span>
+<span class="s1">import android.os.Bundle</span>
+<span class="s1">import android.os.Handler</span>
+<span class="s1">import android.view.View</span>
+<span class="s1">import android.widget.TextView</span>
+<span class="s1">import java.util.*</span>
+
+<span class="s0">class </span><span class="s1">MainActivity : Activity() {</span>
+    <span class="s1">private </span><span class="s0">var </span><span class="s1">sec = </span><span class="s2">0</span>
+    <span class="s1">private </span><span class="s0">var </span><span class="s1">is_running = </span><span class="s0">false</span>
+    <span class="s1">private </span><span class="s0">var </span><span class="s1">was_running = </span><span class="s0">false</span>
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">onCreate(savedInstanceState: Bundle?) {</span>
+        <span class="s0">super</span><span class="s1">.onCreate(savedInstanceState)</span>
+        <span class="s1">setContentView(R.layout.activity_main)</span>
+        <span class="s0">if </span><span class="s1">(savedInstanceState != </span><span class="s0">null</span><span class="s1">) {</span>
+            <span class="s1">sec = savedInstanceState.getInt(</span><span class="s3">&quot;seconds&quot;</span><span class="s1">)</span>
+            <span class="s1">is_running = savedInstanceState.getBoolean(</span><span class="s3">&quot;running&quot;</span><span class="s1">)</span>
+            <span class="s1">was_running = savedInstanceState.getBoolean(</span><span class="s3">&quot;wasRunning&quot;</span><span class="s1">)</span>
+        <span class="s1">}</span>
+        <span class="s1">running_Timer()</span>
+    <span class="s1">}</span>
+
+    <span class="s1">public override </span><span class="s0">fun </span><span class="s1">onSaveInstanceState(</span>
+        <span class="s1">savedInstanceState: Bundle</span>
+    <span class="s1">) {</span>
+        <span class="s1">savedInstanceState.putInt(</span><span class="s3">&quot;seconds&quot;</span><span class="s0">, </span><span class="s1">sec)</span>
+        <span class="s1">savedInstanceState.putBoolean(</span><span class="s3">&quot;running&quot;</span><span class="s0">, </span><span class="s1">is_running)</span>
+        <span class="s1">savedInstanceState.putBoolean(</span><span class="s3">&quot;wasRunning&quot;</span><span class="s0">, </span><span class="s1">was_running)</span>
+    <span class="s1">}</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">onPause() {</span>
+        <span class="s0">super</span><span class="s1">.onPause()</span>
+        <span class="s1">was_running = is_running</span>
+        <span class="s1">is_running = </span><span class="s0">false</span>
+    <span class="s1">}</span>
+
+    <span class="s1">override </span><span class="s0">fun </span><span class="s1">onResume() {</span>
+        <span class="s0">super</span><span class="s1">.onResume()</span>
+        <span class="s0">if </span><span class="s1">(was_running) {</span>
+            <span class="s1">is_running = </span><span class="s0">true</span>
+        <span class="s1">}</span>
+    <span class="s1">}</span>
+
+    <span class="s0">fun </span><span class="s1">onClickStart(view: View?) {</span>
+        <span class="s1">is_running = </span><span class="s0">true</span>
+    <span class="s1">}</span>
+
+    <span class="s0">fun </span><span class="s1">onClickStop(view: View?) {</span>
+        <span class="s1">is_running = </span><span class="s0">false</span>
+    <span class="s1">}</span>
+
+    <span class="s0">fun </span><span class="s1">onClickReset(view: View?) {</span>
+        <span class="s1">is_running = </span><span class="s0">false</span>
+        <span class="s1">sec = </span><span class="s2">0</span>
+    <span class="s1">}</span>
+
+    <span class="s1">private </span><span class="s0">fun </span><span class="s1">running_Timer() {</span>
+        <span class="s0">val </span><span class="s1">t_View = findViewById&lt;View&gt;(R.id.time_view) </span><span class="s0">as </span><span class="s1">TextView</span>
+        <span class="s0">val </span><span class="s1">handle = Handler()</span>
+        <span class="s1">handle.post(</span><span class="s0">object </span><span class="s1">: Runnable {</span>
+            <span class="s1">override </span><span class="s0">fun </span><span class="s1">run() {</span>
+                <span class="s0">val </span><span class="s1">hrs = sec / </span><span class="s2">3600</span>
+                <span class="s0">val </span><span class="s1">mins = sec % </span><span class="s2">3600 </span><span class="s1">/ </span><span class="s2">60</span>
+                <span class="s0">val </span><span class="s1">secs = sec % </span><span class="s2">60</span>
+                <span class="s0">val </span><span class="s1">time_t =</span>
+                    <span class="s1">String.format(Locale.getDefault()</span><span class="s0">, </span><span class="s3">&quot;    %d:%02d:%02d   &quot;</span><span class="s0">, </span><span class="s1">hrs</span><span class="s0">, </span><span class="s1">mins</span><span class="s0">, </span><span class="s1">secs)</span>
+                <span class="s1">t_View.text = time_t</span>
+                <span class="s0">if </span><span class="s1">(is_running) {</span>
+                    <span class="s1">sec++</span>
+                <span class="s1">}</span>
+                <span class="s1">handle.postDelayed(</span><span class="s0">this, </span><span class="s2">1000</span><span class="s1">)</span>
+            <span class="s1">}</span>
+        <span class="s1">})</span>
+    <span class="s1">}</span>
+<span class="s1">}</span></pre>
+</body>
+</html>
